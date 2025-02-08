@@ -31,7 +31,9 @@ def process_files(directory):
                     df = pd.read_csv(filepath, header=None, skiprows=1, encoding='latin1', dtype=str)
                 
                 if df.shape[1] > 1:
-                    team_players[team].extend(df.iloc[:, 1].dropna().tolist())
+                    players = df.iloc[:, 1].dropna().tolist()
+                    players = [p.encode('latin1').decode('utf-8') for p in players]  # Fix encoding issues
+                    team_players[team].extend(players)
     
     return team_players
 
@@ -62,3 +64,4 @@ if target_button:
     st.write("## Selected Players")
     result_df = pd.DataFrame([(team, ", ".join(players)) for team, players in selected_players.items()], columns=["Team", "Selected Players"])
     st.dataframe(result_df)
+
