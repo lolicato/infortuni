@@ -79,4 +79,4 @@ if target_button:
     st.write("## Selected Players")
     
     # Reduce column width to 12 characters
-    st.dataframe(result_df.style.set_properties(**{'width': '12ch'}))
+    st.dataframe(result_df.style.set_properties(**{'width': '30ch'}))
