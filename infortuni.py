@@ -24,8 +24,8 @@ def process_files(directory):
                 if team not in team_players:
                     team_players[team] = []
                 
-                # Read file and extract second column
-                df = pd.read_csv(filepath, header=None)
+                # Read file and extract second column, ignoring the first row
+                df = pd.read_csv(filepath, header=None, skiprows=1)
                 if df.shape[1] > 1:
                     team_players[team].extend(df.iloc[:, 1].dropna().tolist())
     
@@ -46,8 +46,8 @@ directory = "./server_files"  # Update with actual path to server files
 team_players = process_files(directory)
 
 # Interactive selection of min and max players
-min_players = st.slider("Minimum Players to Select", 0, 10, 0)
-max_players = st.slider("Maximum Players to Select", 0, 11, 4)
+min_players = st.slider("Minimum Players to Select", 0, 3, 0)
+max_players = st.slider("Maximum Players to Select", 0, 3, 3)
 
 target_button = st.button("Generate Random Players")
 
