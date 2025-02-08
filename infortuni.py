@@ -28,7 +28,7 @@ def process_files(directory):
                 for encoding in ['utf-8', 'ISO-8859-1', 'latin1']:
                     try:
                         df = pd.read_csv(filepath, header=None, skiprows=1, encoding=encoding, dtype=str)
-                        df.iloc[:, 1] = df.iloc[:, 1].dropna().astype(str).apply(lambda x: x.encode('latin1').decode('utf-8'))
+                        df.iloc[:, 1] = df.iloc[:, 1].dropna().astype(str).map(lambda x: x.encode(encoding, errors='ignore').decode('utf-8', errors='ignore'))
                         break
                     except (UnicodeDecodeError, IndexError):
                         continue
