@@ -46,8 +46,8 @@ directory = "./server_files"  # Update with actual path to server files
 team_players = process_files(directory)
 
 # Interactive selection of min and max players
-min_players = st.slider("Minimum Players to Select", 0, 3, 0)
-max_players = st.slider("Maximum Players to Select", 0, 3, 3)
+min_players = st.slider("Minimum Players to Select", 0, 10, 0)
+max_players = st.slider("Maximum Players to Select", 0, 11, 4)
 
 target_button = st.button("Generate Random Players")
 
