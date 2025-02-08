@@ -38,7 +38,7 @@ def process_files(directory):
                     df = df.dropna(subset=[1, 2])  # Ensure valid rows
                     df = df[df.iloc[:, 2] != "PT"]  # Exclude players marked as PT
                     players_list = df.apply(lambda row: f"{row.iloc[1]} ({row.iloc[2]})", axis=1).tolist()
-                    players_list = [p.replace("                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 TM", " (") for p in players_list]  # Fix formatting issue
+                    players_list = [p.replace("TM", " (") for p in players_list]  # Fix formatting issue
                     team_players[team].extend(players_list)
     
     return team_players
