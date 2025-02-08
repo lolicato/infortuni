@@ -55,8 +55,8 @@ directory = "./server_files"  # Update with actual path to server files
 team_players = process_files(directory)
 
 # Interactive selection of min and max players
-min_players = st.slider("Minimum Players to Select", 0, 3, 0)
-max_players = st.slider("Maximum Players to Select", 0, 3, 3)
+min_players = st.slider("Minimum Players to Select", 0, 10, 0)
+max_players = st.slider("Maximum Players to Select", 0, 10, 3)
 
 target_button = st.button("Generate Random Players")
 
@@ -76,4 +76,4 @@ if target_button:
     st.write("## Selected Players")
     
     # Reduce column width to 12 characters
-    st.dataframe(result_df.style.set_properties(**{'width': '12ch'}))
+    st.dataframe(result_df.style.set_properties(**{'width': '20ch'}))
