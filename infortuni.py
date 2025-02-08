@@ -34,9 +34,9 @@ def process_files(directory):
                         continue
                 
                 if df.shape[1] > 2:  # Ensure the third column exists
-                    players = df.iloc[:, [1, 2]].dropna()
-                    players = players[players.iloc[:, 1] != "PT"]  # Exclude players marked as PT
-                    players_list = players.iloc[:, 0].tolist()
+                    df = df.dropna(subset=[1, 2])  # Ensure valid rows
+                    df = df[df.iloc[:, 2] != "PT"]  # Exclude players marked as PT
+                    players_list = df.iloc[:, 1].tolist()
                     players_list = [p.replace(" TM", "").strip() for p in players_list]  # Remove " TM" and extra spaces
                     team_players[team].extend(players_list)
     
@@ -57,8 +57,8 @@ directory = "./server_files"  # Update with actual path to server files
 team_players = process_files(directory)
 
 # Interactive selection of min and max players
-min_players = st.slider("Minimum Players to Select", 0, 10, 0)
-max_players = st.slider("Maximum Players to Select", 0, 10, 2)
+min_players = st.slider("Minimum Players to Select", 0, 3, 0)
+max_players = st.slider("Maximum Players to Select", 0, 3, 3)
 
 target_button = st.button("Generate Random Players")
 
