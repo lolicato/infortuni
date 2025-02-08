@@ -28,14 +28,14 @@ def process_files(directory):
                 for encoding in ['utf-8', 'ISO-8859-1', 'latin1']:
                     try:
                         df = pd.read_csv(filepath, header=None, skiprows=1, encoding=encoding, dtype=str)
-                        df.iloc[:, 1] = df.iloc[:, 1].dropna().astype(str).map(lambda x: x.encode(encoding, errors='ignore').decode('utf-8', errors='ignore'))
+                        df.iloc[:, 1] = df.iloc[:, 1].dropna().astype(str).map(lambda x: x.encode(encoding, errors='ignore').decode('utf-8', errors='ignore').strip())
                         break
                     except (UnicodeDecodeError, IndexError):
                         continue
                 
                 if df.shape[1] > 1:
                     players = df.iloc[:, 1].dropna().tolist()
-                    players = [p.replace(" TM", "") for p in players]  # Remove " TM" from player names
+                    players = [p.replace(" TM", "").strip() for p in players]  # Remove " TM" and extra spaces
                     team_players[team].extend(players)
     
     return team_players
@@ -55,8 +55,8 @@ directory = "./server_files"  # Update with actual path to server files
 team_players = process_files(directory)
 
 # Interactive selection of min and max players
-min_players = st.slider("Minimum Players to Select", 0, 10, 0)
-max_players = st.slider("Maximum Players to Select", 0, 10, 3)
+min_players = st.slider("Minimum Players to Select", 0, 3, 0)
+max_players = st.slider("Maximum Players to Select", 0, 3, 3)
 
 target_button = st.button("Generate Random Players")
 
@@ -76,5 +76,4 @@ if target_button:
     st.write("## Selected Players")
     
     # Reduce column width to 12 characters
-    st.dataframe(result_df.style.set_properties(**{'width': '5ch'}))
-
+    st.dataframe(result_df.style.set_properties(**{'width': '12ch'}))
