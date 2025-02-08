@@ -28,7 +28,7 @@ def process_files(directory):
                 for encoding in ['utf-8', 'ISO-8859-1', 'latin1']:
                     try:
                         df = pd.read_csv(filepath, header=None, skiprows=1, encoding=encoding, dtype=str)
-                        df.iloc[:, 1] = df.iloc[:, 1].dropna().astype(str).map(lambda x: x.encode(encoding, errors='ignore').decode('utf-8', errors='ignore').replace(" ", "").strip())
+                        df.iloc[:, 1] = df.iloc[:, 1].dropna().astype(str).map(lambda x: x.encode(encoding, errors='ignore').decode('utf-8', errors='ignore')
                         df.iloc[:, 2] = df.iloc[:, 2].dropna().astype(str).map(lambda x: x.replace(" ", "").strip())
                         break
                     except (UnicodeDecodeError, IndexError):
@@ -38,7 +38,7 @@ def process_files(directory):
                     df = df.dropna(subset=[1, 2])  # Ensure valid rows
                     df = df[df.iloc[:, 2] != "PT"]  # Exclude players marked as PT
                     players_list = df.apply(lambda row: f"{row.iloc[1]}({row.iloc[2]})", axis=1).tolist()
-                    players_list = [p.replace("TM(", " (").strip() for p in players_list]  # Replace "TM(" with " ("
+                    players_list = [p.replace("TM(", " (") for p in players_list]  # Fix formatting issue
                     team_players[team].extend(players_list)
     
     return team_players
@@ -58,8 +58,8 @@ directory = "./server_files"  # Update with actual path to server files
 team_players = process_files(directory)
 
 # Interactive selection of min and max players
-min_players = st.slider("Minimum Players to Select", 0, 10, 0)
-max_players = st.slider("Maximum Players to Select", 0, 10, 2)
+min_players = st.slider("Minimum Players to Select", 0, 3, 0)
+max_players = st.slider("Maximum Players to Select", 0, 3, 3)
 
 target_button = st.button("Generate Random Players")
 
@@ -78,5 +78,6 @@ if target_button:
     result_df = pd.DataFrame(result_data, columns=columns)
     st.write("## Selected Players")
     
-    # Reduce column width to 12 characters
-    st.dataframe(result_df,  height=800, use_container_width=True)
+    # Display full table without scrolling
+    st.dataframe(result_df, height=800, use_container_width=True)
+
