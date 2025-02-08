@@ -28,12 +28,13 @@ def process_files(directory):
                 for encoding in ['utf-8', 'ISO-8859-1', 'latin1']:
                     try:
                         df = pd.read_csv(filepath, header=None, skiprows=1, encoding=encoding, dtype=str)
+                        df.iloc[:, 1] = df.iloc[:, 1].dropna().astype(str).apply(lambda x: x.encode('latin1').decode('utf-8'))
                         break
-                    except UnicodeDecodeError:
+                    except (UnicodeDecodeError, IndexError):
                         continue
                 
                 if df.shape[1] > 1:
-                    players = df.iloc[:, 1].dropna().astype(str).tolist()
+                    players = df.iloc[:, 1].dropna().tolist()
                     team_players[team].extend(players)
     
     return team_players
@@ -65,3 +66,4 @@ if target_button:
     st.write("## Selected Players")
     result_df = pd.DataFrame([(team, ", ".join(players)) for team, players in selected_players.items()], columns=["Team", "Selected Players"])
     st.dataframe(result_df)
+
