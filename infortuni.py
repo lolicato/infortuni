@@ -63,8 +63,16 @@ target_button = st.button("Generate Random Players")
 if target_button:
     selected_players = select_random_players(team_players, min_players, max_players)
     
-    # Display results in a single line per team
+    # Format results with each selected player in a different column
+    max_players_selected = max(len(players) for players in selected_players.values()) if selected_players else 0
+    columns = ["Team"] + [f"Player {i+1}" for i in range(max_players_selected)]
+    result_data = []
+    
+    for team, players in selected_players.items():
+        row = [team] + players + ["" for _ in range(max_players_selected - len(players))]  # Fill empty columns
+        result_data.append(row)
+    
+    result_df = pd.DataFrame(result_data, columns=columns)
     st.write("## Selected Players")
-    result_df = pd.DataFrame([(team, ", ".join(players)) for team, players in selected_players.items()], columns=["Team", "Selected Players"])
     st.dataframe(result_df)
 
