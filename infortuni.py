@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 import random
 import os
+import re
 
 def extract_team_and_player(filename):
     """Extract team and player names from the filename."""
@@ -38,9 +39,15 @@ def process_files(directory):
                     df = df.dropna(subset=[1, 2])  # Ensure valid rows
                     df = df[df.iloc[:, 2] != "PT"]  # Exclude players marked as PT
                     players_list = df.apply(lambda row: f"{row.iloc[1]} ({row.iloc[2]})", axis=1).tolist()
-                    players_list = [p.replace("TM(", " (") for p in players_list]  # Fix formatting issue
+                    
+                    # Fix formatting issues
+                    players_list = [p.replace("TM(", " (") for p in players_list]
                     players_list = [p.replace(" ", "") for p in players_list]
                     players_list = [p.replace("TM(", " (") for p in players_list] 
+
+                    # Ensure spaces between lowercase and uppercase letters
+                    players_list = [re.sub(r'(?<=[a-z])(?=[A-Z])', ' ', p) for p in players_list]
+                    
                     team_players[team].extend(players_list)
     
     return team_players
@@ -82,4 +89,3 @@ if target_button:
     
     # Display full table without scrolling
     st.dataframe(result_df, height=800, use_container_width=True)
-
