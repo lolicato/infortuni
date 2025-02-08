@@ -28,8 +28,8 @@ def process_files(directory):
                 for encoding in ['utf-8', 'ISO-8859-1', 'latin1']:
                     try:
                         df = pd.read_csv(filepath, header=None, skiprows=1, encoding=encoding, dtype=str)
-                        df.iloc[:, 1] = df.iloc[:, 1].dropna().astype(str).map(lambda x: x.encode(encoding, errors='ignore').decode('utf-8', errors='ignore'))
-                        df.iloc[:, 2] = df.iloc[:, 2].dropna().astype(str).map(lambda x: x.replace(" ", "").strip())
+                        df.iloc[:, 1] = df.iloc[:, 1].dropna().astype(str).map(lambda x: x.encode(encoding, errors='ignore').decode('utf-8', errors='ignore').strip())
+                        df.iloc[:, 2] = df.iloc[:, 2].dropna().astype(str).map(lambda x: x.strip())
                         break
                     except (UnicodeDecodeError, IndexError):
                         continue
@@ -37,8 +37,8 @@ def process_files(directory):
                 if df.shape[1] > 2:  # Ensure the third column exists
                     df = df.dropna(subset=[1, 2])  # Ensure valid rows
                     df = df[df.iloc[:, 2] != "PT"]  # Exclude players marked as PT
-                    players_list = df.apply(lambda row: f"{row.iloc[1]}({row.iloc[2]})", axis=1).tolist()
-                    players_list = [p.replace("TM(", " (") for p in players_list]  # Fix formatting issue
+                    players_list = df.apply(lambda row: f"{row.iloc[1]} ({row.iloc[2]})", axis=1).tolist()
+                    players_list = [p.replace("TM (", " (") for p in players_list]  # Fix formatting issue
                     team_players[team].extend(players_list)
     
     return team_players
