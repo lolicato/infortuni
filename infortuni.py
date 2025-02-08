@@ -80,4 +80,3 @@ if target_button:
     
     # Reduce column width to 12 characters
     st.dataframe(result_df.style.set_properties(**{'width': '12ch'}))
-
