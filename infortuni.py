@@ -1,4 +1,4 @@
-import streamlit as st
+kimport streamlit as st
 import pandas as pd
 import random
 import os
@@ -36,7 +36,7 @@ def process_files(directory):
                 if df.shape[1] > 2:  # Ensure the third column exists
                     df = df.dropna(subset=[1, 2])  # Ensure valid rows
                     df = df[df.iloc[:, 2] != "PT"]  # Exclude players marked as PT
-                    players_list = df.apply(lambda row: f"{row.iloc[1].rstrip()} ({row.iloc[2]})", axis=1).tolist()
+                    players_list = df.apply(lambda row: f"{row.iloc[1].strip()} ({row.iloc[2].strip()})", axis=1).tolist()
                     players_list = [p.replace(" TM", "").strip() for p in players_list]  # Remove " TM" and extra spaces
                     team_players[team].extend(players_list)
     
@@ -57,8 +57,8 @@ directory = "./server_files"  # Update with actual path to server files
 team_players = process_files(directory)
 
 # Interactive selection of min and max players
-min_players = st.slider("Minimum Players to Select", 0, 10, 0)
-max_players = st.slider("Maximum Players to Select", 0, 10, 2)
+min_players = st.slider("Minimum Players to Select", 0, 3, 0)
+max_players = st.slider("Maximum Players to Select", 0, 3, 3)
 
 target_button = st.button("Generate Random Players")
 
