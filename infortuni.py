@@ -24,7 +24,7 @@ def process_files(directory):
                 if team not in team_players:
                     team_players[team] = []
                 
-                # Read file and extract second column, ignoring the first row
+                # Read file and extract relevant columns, ignoring the first row
                 for encoding in ['utf-8', 'ISO-8859-1', 'latin1']:
                     try:
                         df = pd.read_csv(filepath, header=None, skiprows=1, encoding=encoding, dtype=str)
@@ -33,10 +33,12 @@ def process_files(directory):
                     except (UnicodeDecodeError, IndexError):
                         continue
                 
-                if df.shape[1] > 1:
-                    players = df.iloc[:, 1].dropna().tolist()
-                    players = [p.replace(" TM", "").strip() for p in players]  # Remove " TM" and extra spaces
-                    team_players[team].extend(players)
+                if df.shape[1] > 2:  # Ensure the third column exists
+                    players = df.iloc[:, [1, 2]].dropna()
+                    players = players[players.iloc[:, 1] != "PT"]  # Exclude players marked as PT
+                    players_list = players.iloc[:, 0].tolist()
+                    players_list = [p.replace(" TM", "").strip() for p in players_list]  # Remove " TM" and extra spaces
+                    team_players[team].extend(players_list)
     
     return team_players
 
@@ -56,7 +58,7 @@ team_players = process_files(directory)
 
 # Interactive selection of min and max players
 min_players = st.slider("Minimum Players to Select", 0, 10, 0)
-max_players = st.slider("Maximum Players to Select", 0, 10, 3)
+max_players = st.slider("Maximum Players to Select", 0, 10, 2)
 
 target_button = st.button("Generate Random Players")
 
@@ -76,4 +78,5 @@ if target_button:
     st.write("## Selected Players")
     
     # Reduce column width to 12 characters
-    st.dataframe(result_df.style.set_properties(**{'width': '20ch'}))
+    st.dataframe(result_df.style.set_properties(**{'width': '12ch'}))
+
