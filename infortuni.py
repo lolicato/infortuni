@@ -40,6 +40,7 @@ def process_files(directory):
                     players_list = df.apply(lambda row: f"{row.iloc[1]} ({row.iloc[2]})", axis=1).tolist()
                     players_list = [p.replace("TM(", " (") for p in players_list]  # Fix formatting issue
                     players_list = [p.replace(" ", "") for p in players_list]
+                    players_list = [p.replace("TM(", " (") for p in players_list] 
                     team_players[team].extend(players_list)
     
     return team_players
