@@ -35,6 +35,7 @@ def process_files(directory):
                 
                 if df.shape[1] > 1:
                     players = df.iloc[:, 1].dropna().tolist()
+                    players = [p.replace(" TM", "") for p in players]  # Remove " TM" from player names
                     team_players[team].extend(players)
     
     return team_players
@@ -62,7 +63,7 @@ target_button = st.button("Generate Random Players")
 if target_button:
     selected_players = select_random_players(team_players, min_players, max_players)
     
-    # Display results in a table
+    # Display results in a single line per team
     st.write("## Selected Players")
     result_df = pd.DataFrame([(team, ", ".join(players)) for team, players in selected_players.items()], columns=["Team", "Selected Players"])
     st.dataframe(result_df)
